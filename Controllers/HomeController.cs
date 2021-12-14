@@ -1,6 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using PhoneMax_1._1.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,6 +12,12 @@ namespace PhoneMax_1._1.Controllers
 {
     public class HomeController : Controller
     {
+        
+        public IConfiguration Configuration { get; }
+        public HomeController(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
         public IActionResult Index()
         {
             return View();
@@ -20,7 +30,27 @@ namespace PhoneMax_1._1.Controllers
         {
             return View();
         }
-        public IActionResult Android()
+        [HttpPost]
+        public IActionResult LoginSignupPage(Registration registration)
+        {
+            string connectionString = Configuration["ConnectionStrings:MyConnection"];
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sql = $"Insert Into Registration (Name, Email, Password) Values ('{registration.Name}', '{registration.Email}','{registration.Password}')";
+
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    command.CommandType = CommandType.Text;
+
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+            ViewBag.Result = "Success";
+            return RedirectToAction("");
+        }
+            public IActionResult Android()
         {
             return View();
         }

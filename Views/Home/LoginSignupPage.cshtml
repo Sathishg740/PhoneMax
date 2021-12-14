@@ -1,4 +1,4 @@
-﻿
+﻿@model PhoneMax_1._1.Models.Registration
 @{
     ViewData["Title"] = "login";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -20,6 +20,7 @@
     <div class="cont">
         <div id="signin" class="form sign-in">
             <h2>Welcome</h2>
+            
             <label>
                 <span>Email</span>
                 <input type="email" />
@@ -51,20 +52,30 @@
             </div>
             <div class="form sign-up">
                 <h2>Create your Account</h2>
-                <label>
-                    <span>Name</span>
-                    <input type="text" />
-                </label>
-                <label>
-                    <span>Email</span>
-                    <input type="email" />
-                </label>
-                <label>
-                    <span>Password</span>
-                    <input type="password" />
-                </label>
-                <button type="button" class="submit">Sign Up</button>
+                <h2 class="alert-danger">@ViewBag.Result</h2>
+                <form method="post" >
+                    <div class="form-group">
+                        <label>
+                            <span>Name</span>
+                            <input type="text" class="form-control" asp-for="Name" />
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <span>Email</span>
+                            <input type="email" class="form-control" asp-for="Email" />
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <span>Password</span>
+                            <input type="password" class="form-control" asp-for="Password" />
+                        </label>
+                    </div>
 
+                        <input type="submit"  value="SignUp" class="submit">
+                   
+                </form>
             </div>
         </div>
     </div>

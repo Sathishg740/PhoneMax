@@ -17,6 +17,7 @@ namespace PhoneMax_1._1
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc(options => options.EnableEndpointRouting = false);
+            services.AddControllersWithViews();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -26,8 +27,17 @@ namespace PhoneMax_1._1
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
+
             app.UseRouting();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+            });
             app.UseMvcWithDefaultRoute();
             //app.UseEndpoints(endpoints =>
             //{
