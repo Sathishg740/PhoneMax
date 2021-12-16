@@ -11,5 +11,7 @@ namespace PhoneMax_1._1.Models
         public string Name { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
+        public string LoginEmail { get; set; }
+        public string LoginPassword { get; set; }
     }
 }

@@ -12,7 +12,7 @@ namespace PhoneMax_1._1.Controllers
 {
     public class HomeController : Controller
     {
-        
+
         public IConfiguration Configuration { get; }
         public HomeController(IConfiguration configuration)
         {
@@ -26,6 +26,27 @@ namespace PhoneMax_1._1.Controllers
         {
             return View();
         }
+        [HttpPost]
+        public IActionResult UserDetails(UserDetails user)
+        {
+
+            string connectionString = Configuration["ConnectionStrings:MyConnection"];
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sql = $"Insert Into UserDetails (Name,Email,Address,City,State,Pincode) Values ('{user.Name}', '{user.Email}','{user.Address}', '{user.City}', '{user.State}','{user.Pncode}' )";
+
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    command.CommandType = CommandType.Text;
+
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+
+            return RedirectToAction("Sucess");
+        }
         public IActionResult LoginSignupPage()
         {
             return View();
@@ -33,6 +54,7 @@ namespace PhoneMax_1._1.Controllers
         [HttpPost]
         public IActionResult LoginSignupPage(Registration registration)
         {
+           
             string connectionString = Configuration["ConnectionStrings:MyConnection"];
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -47,9 +69,67 @@ namespace PhoneMax_1._1.Controllers
                     connection.Close();
                 }
             }
-            ViewBag.Result = "Success";
-            return RedirectToAction("");
+
+            ViewBag.Result = 1;
+
+            //using (SqlConnection connection = new SqlConnection(connectionString))
+            //{
+            //    DataTable dataTable = new DataTable();
+            //    string sql1 = $"Select * From Register";
+            //    SqlCommand command = new SqlCommand(sql1, connection);
+
+            //    connection.Open();
+
+            //    using (SqlDataReader dataReader = command.ExecuteReader())
+            //    {
+            //        while (dataReader.Read())
+            //        {
+            //            register.LoginEmail = Convert.ToString(dataReader["Email"]);
+            //            register.LoginPassword = Convert.ToString(dataReader["Password"]);
+            //        }
+            //    }
+
+            //    connection.Close();
+            //}
+            return View();
+
+            // return RedirectToAction("");
         }
+       
+       
+        
+        public IActionResult Login(Registration register)
+        {
+           
+            var check = 1;
+            string connectionString = Configuration["ConnectionStrings:MyConnection"];
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sql = $"Select Email,Password From Registration where Email = '{register.LoginEmail}' and Password = '{register.LoginPassword}'";
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    command.CommandType = CommandType.Text;
+
+                    connection.Open();
+                     var validate = command.ExecuteScalar();
+                        if(validate!= null)
+                    {
+                        check = 0;
+
+                    }
+                    connection.Close();
+                }
+                
+            }
+            if (check==0)
+            {
+                return RedirectToAction("Index");
+            }
+          
+            return RedirectToAction("LoginSignupPage");
+          
+        }
+    
             public IActionResult Android()
         {
             return View();
@@ -144,7 +224,32 @@ namespace PhoneMax_1._1.Controllers
         }
         public IActionResult Sucess()
         {
-            return View();
+            List<UserDetails> UserList = new List<UserDetails>();
+            string connectionString = Configuration["ConnectionStrings:MyConnection"];
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string sql = "Select * From UserDetails";
+                SqlCommand command = new SqlCommand(sql, connection);
+                using (SqlDataReader dataReader = command.ExecuteReader())
+                {
+                    while (dataReader.Read())
+                    {
+                        UserDetails user = new UserDetails();
+                        user.user_id = Convert.ToInt32(dataReader["user_id"]);
+                        user.Name = Convert.ToString(dataReader["Name"]);
+                        user.Email = Convert.ToString(dataReader["Email"]);
+                        user.Address = Convert.ToString(dataReader["Address"]);
+                        user.City = Convert.ToString(dataReader["City"]);
+                        user.State = Convert.ToString(dataReader["State"]);
+                        user.Pncode = Convert.ToInt32(dataReader["Pincode"]);
+                        UserList.Add(user);
+                    }
+                }
+                connection.Close();
+
+            }
+            return View(UserList);
         }
         public IActionResult Cart()
         {
