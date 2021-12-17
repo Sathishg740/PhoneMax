@@ -17,26 +17,31 @@
 <body>
     <br>
     <br>
-    <div class="cont">
+    <div class="cont">  
+        
         <form>
-        <div id="signin" class="form sign-in">
-            <h2>Welcome</h2>
+            <div id="signin" class="form sign-in">
+                <h2>Welcome</h2>
 
-            <label>
-                <span>Email</span>
-                <input type="email" class="form-control" asp-for="LoginEmail" />
-            </label>
-            <label>
-                <span>Password</span>
-                <input type="password" class="form-control" asp-for="LoginPassword" />
-            </label>
-            <p class="forgot-pass">Forgot password?</p>
+                <label>
+                    <span>Email</span>
+                    <input type="email" class="form-control" asp-for="LoginEmail" />
+                </label>
+                <label>
+                    <span>Password</span>
+                    <input type="password" class="form-control" asp-for="LoginPassword" />
+                </label>
+                <p class="forgot-pass">Forgot password?</p>
 
-            <button type="submit" asp-action="Login" class="submit login">Sign In</button>
+                <button type="submit" asp-action="Login" class="submit login">Sign In</button>
 
 
-        </div>
-            </form>
+            </div>
+          
+        </form>
+            
+
+
         <div class="sub-cont">
             <div class="img">
                 <div class="img__text m--up">
@@ -98,13 +103,25 @@
         if (result == 1) {
             alert("Signup sucessfull");
         }
-       
+
+
         document.querySelector('.img__btn').addEventListener('click', function() {
             document.querySelector('.cont').classList.toggle('s--signup');
         });
-        var res;
+        //var res;
         //console.log(Registration);
 
+        
+    </script>
+    <script>
+       var query = @ViewBag.Query
+             console.log(query);
+         if (query!= 1) {
+             alert("Please enter valid email and password");
+         }
+         else {
+             alert("login sucessfull redirecting to home page");
+         }
     </script>
 </body>
 </html>

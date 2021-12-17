@@ -121,11 +121,17 @@ namespace PhoneMax_1._1.Controllers
                 }
                 
             }
-            if (check==0)
+            if (check == 0)
             {
+
                 return RedirectToAction("Index");
             }
-          
+            else
+            {
+
+                ViewBag.Query = 1;
+            }
+
             return RedirectToAction("LoginSignupPage");
           
         }
@@ -255,5 +261,6 @@ namespace PhoneMax_1._1.Controllers
         {
             return View();
         }
+       
     }
 }

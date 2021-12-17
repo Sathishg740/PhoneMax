@@ -36,7 +36,7 @@ namespace PhoneMax_1._1
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=LoginSignupPage}/{id?}");
             });
             app.UseMvcWithDefaultRoute();
             //app.UseEndpoints(endpoints =>
