@@ -14,6 +14,8 @@ namespace PhoneMax_1._1.Controllers
     {
 
         public IConfiguration Configuration { get; }
+        
+
         public HomeController(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -136,6 +138,8 @@ namespace PhoneMax_1._1.Controllers
           
         }
     
+
+
             public IActionResult Android()
         {
             return View();
@@ -150,7 +154,34 @@ namespace PhoneMax_1._1.Controllers
         }
         public IActionResult GalaxyNote()
         {
-            return View();
+            List<ProductDetails> UserList = new List<ProductDetails>();
+            string connectionString = Configuration["ConnectionStrings:MyConnection"];
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string sql = "Select * From ProductDetails where Product_Id = '7'";
+                SqlCommand command = new SqlCommand(sql, connection);
+                using (SqlDataReader dataReader = command.ExecuteReader())
+                {
+                    while (dataReader.Read())
+                    {
+                        ProductDetails user = new ProductDetails();
+                        user.Product_Id = Convert.ToInt32(dataReader["Product_Id"]);
+                        user.Product_Name = Convert.ToString(dataReader["Product_Name"]);
+                        user.Category_Name = Convert.ToString(dataReader["Category_Name"]);
+                        user.Brand_Name = Convert.ToString(dataReader["Brand_Name"]);
+                        user.Price = Convert.ToInt32(dataReader["Price"]);
+                        user.Description = Convert.ToString(dataReader["Description"]);
+                        user.Image = Convert.ToString(dataReader["Image"]);
+                        UserList.Add(user);
+                        ViewBag.Id = Convert.ToInt32(dataReader["Product_Id"]);
+                    }
+                }
+                connection.Close();
+
+            }
+
+            return View(UserList);
         }
         public IActionResult GalaxyS21()
         {
@@ -235,14 +266,14 @@ namespace PhoneMax_1._1.Controllers
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                string sql = "Select * From UserDetails";
+                string sql = "Select * From UserDetails ";
                 SqlCommand command = new SqlCommand(sql, connection);
                 using (SqlDataReader dataReader = command.ExecuteReader())
                 {
                     while (dataReader.Read())
                     {
                         UserDetails user = new UserDetails();
-                        user.user_id = Convert.ToInt32(dataReader["user_id"]);
+                      
                         user.Name = Convert.ToString(dataReader["Name"]);
                         user.Email = Convert.ToString(dataReader["Email"]);
                         user.Address = Convert.ToString(dataReader["Address"]);
@@ -259,8 +290,120 @@ namespace PhoneMax_1._1.Controllers
         }
         public IActionResult Cart()
         {
+            List<Product> products = new List<Product>() {
+                new Product () {
+                    Id = 1,
+                    Photo = "https://m.media-amazon.com/images/I/71MmJNwZcML._SL1500_.jpg",
+                    Name = "Galaxy Z Fold3 5G(Phantom Black, 12GB RAM, 256GB Storage)",
+                    Price = 149999,
+                    Offers="Bank Offer 100Rs",
+                    Details=" Color: Black" +  "Available : InStock " + " Category : Android"
+                },
+            };
+            ViewBag.products = products;
             return View();
         }
+
+        public IActionResult ProductDisplay()
+        {
+            List<Product> products = new List<Product>() {
+                new Product () {
+                    Id = 1,
+                    Photo = "https://m.media-amazon.com/images/I/71MmJNwZcML._SL1500_.jpg",
+                    Name = "Galaxy Z Fold3 5G(Phantom Black, 12GB RAM, 256GB Storage)",
+                    Price = 149999,
+                    Offers="Bank Offer 100Rs",
+                    Details=" Color: Black" +  "Available : InStock " + " Category : Android"
+                },
+
+            };
+            ViewBag.products = products;
+            return View();
+        }
+
+        public IActionResult CartPage()
+        {
+            List<ProductDetails> CartList = new List<ProductDetails>();
+            string connectionString = Configuration["ConnectionStrings:MyConnection"];
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string sql = "Select * From ProductDetails p, Cart c where c.Id = p.Product_Id";
+                SqlCommand command = new SqlCommand(sql, connection);
+                using (SqlDataReader dataReader = command.ExecuteReader())
+                {
+                    while (dataReader.Read())
+                    {
+                        ProductDetails user = new ProductDetails();
+                        user.Product_Id = Convert.ToInt32(dataReader["Product_Id"]);
+                        user.Product_Name = Convert.ToString(dataReader["Product_Name"]);
+                        user.Category_Name = Convert.ToString(dataReader["Category_Name"]);
+                        user.Brand_Name = Convert.ToString(dataReader["Brand_Name"]);
+                        user.Price = Convert.ToInt32(dataReader["Price"]);
+                        user.Description = Convert.ToString(dataReader["Description"]);
+                        user.Image = Convert.ToString(dataReader["Image"]);
+                        CartList.Add(user);
+                        ViewBag.Id = Convert.ToInt32(dataReader["Product_Id"]);
+                    }
+                }
+                connection.Close();
+
+            }
+
+            return View(CartList);
+
+        }
+        public IActionResult Cartinsert(int id)
+        {
+            string connectionString = Configuration["ConnectionStrings:MyConnection"];
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sql = $"Insert Into CartPage(Id) Values ('{id}')";
+
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    command.CommandType = CommandType.Text;
+
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+
+            return View();
+        }
+
+        public IActionResult DisplayPage()
+        {
+            List<ProductDetails> UserList = new List<ProductDetails>();
+            string connectionString = Configuration["ConnectionStrings:MyConnection"];
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string sql = "Select * From ProductDetails where Product_Id = '7'";
+                SqlCommand command = new SqlCommand(sql, connection);
+                using (SqlDataReader dataReader = command.ExecuteReader())
+                {
+                    while (dataReader.Read())
+                    {
+                        ProductDetails user = new ProductDetails();
+                        user.Product_Id = Convert.ToInt32(dataReader["Product_Id"]);
+                        user.Product_Name = Convert.ToString(dataReader["Product_Name"]);
+                        user.Category_Name = Convert.ToString(dataReader["Category_Name"]);
+                        user.Brand_Name = Convert.ToString(dataReader["Brand_Name"]);
+                        user.Price = Convert.ToInt32(dataReader["Price"]);
+                        user.Description = Convert.ToString(dataReader["Description"]);
+                        user.Image = Convert.ToString(dataReader["Image"]);
+                        UserList.Add(user);
+                        ViewBag.Id = Convert.ToInt32(dataReader["Product_Id"]);
+                    }
+                }
+                connection.Close();
+
+            }
+
+            return View(UserList);
+        }
+    }
        
     }
-}
